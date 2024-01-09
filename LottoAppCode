@@ -1,0 +1,176 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package randomnumbergame;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Random;
+
+/**
+ *
+ * @author lucas
+ */
+public class LottoApp {
+
+    private static void Gewinnermittlung(int gewinnGelder) { //bestimmt die Gewinngeldsummen pro richtigem Tipp. Gewinne in tausend Euro.
+        double gewinnProKategorie = 0;
+        if (gewinnGelder == 1) {
+            System.out.println("Sie gehen leider mit leeren Händen davon...");
+            gewinnProKategorie = 0;
+            geldSummeZuKonto = geldSummeZuKonto + gewinnProKategorie;
+        }
+        if (gewinnGelder == 6) {
+            System.out.println("Ihr Gewinn beträgt 629.828€!!!!! Herzlichen Glückwunsch!!!!");
+            gewinnProKategorie = 629.828;
+            geldSummeZuKonto = geldSummeZuKonto + gewinnProKategorie;
+        }
+        if (gewinnGelder == 5) {
+            System.out.println("Ihr Gewinn beträgt 6.245€!!!!! Herzlichen Glückwunsch!!!!");
+            gewinnProKategorie = 6.245;
+            geldSummeZuKonto = geldSummeZuKonto + gewinnProKategorie;
+        }
+        if (gewinnGelder == 4) {
+            System.out.println("Ihr Gewinn beträgt 60€!!!!! Herzlichen Glückwunsch!!!!");
+            gewinnProKategorie = 0.060;
+            geldSummeZuKonto = geldSummeZuKonto + gewinnProKategorie;
+        }
+        if (gewinnGelder == 3) {
+            System.out.println("Ihr Gewinn beträgt 13€!!!!! Herzlichen Glückwunsch!!!!");
+            gewinnProKategorie = 0.013;
+            geldSummeZuKonto = geldSummeZuKonto + gewinnProKategorie;
+        }
+        if (gewinnGelder == 2) {
+            System.out.println("Sie gehen leider mit leeren Händen davon...");
+            gewinnProKategorie = 0;
+            geldSummeZuKonto = geldSummeZuKonto + gewinnProKategorie;
+        } else {
+
+        }
+    }
+
+    int gewinnGelder;
+    static double geldSummeZuKonto;
+
+    public static void main(String[] args) {
+        System.out.println("Willkommen in unserer Lotterie-Gesellschaft 'Glück mit Lück'.");
+        MainMenu();
+    }
+
+    private static void Exit() {
+        while (true) {
+            System.out.println("Sind sie sicher, dass sie die LottoApp beenden wollen? (ja/nein)");
+            Scanner scanner = new Scanner(System.in);
+            String antwort = scanner.nextLine();
+
+            if (antwort.equalsIgnoreCase("ja") || antwort.equalsIgnoreCase("y")) {
+                System.out.println("Vielen Dank für die Nutzung unserer App. Kommen sie bald wieder!");
+                System.exit(0);
+            }
+            if (antwort.equalsIgnoreCase("nein") || antwort.equalsIgnoreCase("n")) {
+                System.out.println("Schön, dass sie uns erhalten bleiben!");
+                return;
+            } else {
+                System.out.println("Unangemessener UserInput! Bitte antworten sie mit Ja oder Nein!");
+            }
+        }
+    }
+
+    private static void LottoscheinZahlenUndZiehung() { //Ermittlung Gewinnzahlen + eigene Tippzahlen
+        List<Integer> eigeneZahlen = new ArrayList<>();
+        List<Integer> lottoZahlen = new ArrayList<>();
+        double spielSechsAusNeunundvierzigKosten = 2;
+        System.out.println("Bitte gib nun 6 Zahlen aus 49 an.");
+        geldSummeZuKonto = geldSummeZuKonto - spielSechsAusNeunundvierzigKosten;
+
+        Scanner scanner = new Scanner(System.in);
+        int gewinnGelder;
+
+        for (int i = 0; i < 6; i++) {
+            if (i <= 6) {
+                while (true) {
+                    System.out.print("Deine Lottozahlen:");
+                    int zahl = Integer.parseInt(scanner.nextLine());
+
+                    if (zahl >= 1 && zahl <= 49) {
+                        eigeneZahlen.add(zahl);
+                        break;
+                    } else {
+                        System.out.println("Ungültiger Input!");
+                        System.out.println("Versuche es erneut! Drücke enter um Fortzufahren!");
+                    }
+                }
+            } else {
+            }
+        }
+        for (int j = 0; j < 6; j++) {
+            Random random = new Random();
+            int zufallsZahl = random.nextInt(1, 49);
+            lottoZahlen.add(zufallsZahl);
+
+        }
+        System.out.println("Lotto-Zahlen: " + lottoZahlen);
+        System.out.println("Eigene Zahlen: " + eigeneZahlen);
+
+        lottoZahlen.retainAll(eigeneZahlen);
+        System.out.println("Übereinstimmende Zahlen: " + lottoZahlen);
+
+        if (lottoZahlen.isEmpty()) {
+            System.out.println("Leider keine übereinstimmende Zahlen!");
+        } else {
+            System.out.println(lottoZahlen.size() + " richtig/e Zahl/en!");
+            gewinnGelder = lottoZahlen.size();
+            Gewinnermittlung(gewinnGelder);
+        }
+        MainMenu();
+    }
+
+    private static void AktuellerGeldBestand() { //Einsicht auf aktuellen Geldbestand
+        List<Double> gesamtGewinne = new ArrayList<>();
+        gesamtGewinne.add(geldSummeZuKonto);
+        System.out.println("Der aktuelle Geldbetrag auf ihrem Gewinnkonto beträgt: " + gesamtGewinne + " €");
+        //speichern in txt-datei
+        String dateipfad = "C:\\Users\\lucas\\OneDrive\\Desktop\\Aktueller Kontostand.txt";
+
+        try ( BufferedWriter writer = new BufferedWriter(new FileWriter(dateipfad, true))) {
+            for (Double gewinn : gesamtGewinne) {
+                writer.write(gewinn.toString());
+                writer.newLine();
+            }
+            System.out.println("Geldbetrag erfolgreich in die Datei geschrieben.");
+            System.out.println("");
+        } catch (IOException e) {
+            System.err.println("Fehler beim Schreiben in die Datei: " + e.getMessage());
+            System.out.println("");
+        } //ggf. finally block himnzufügen
+        MainMenu();
+    }
+
+    private static void MainMenu() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Bitte wählen sie die nachfolgende Aktion aus.");
+        System.out.println("Exit                              0");
+        System.out.println("Lottoschein + Ziehung             1");
+        System.out.println("GewinnUndVerlust-Konto einsehen   2");
+        System.out.println("");
+
+        int auswahl = Integer.parseInt(scanner.nextLine());
+
+        switch (auswahl) {
+            case 0:
+                Exit();
+            case 1:
+                LottoscheinZahlenUndZiehung();
+                break;
+            case 2:
+                AktuellerGeldBestand();
+                break;
+        }
+    }
+
+}
